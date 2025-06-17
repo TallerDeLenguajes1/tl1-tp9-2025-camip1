@@ -1,4 +1,4 @@
-﻿string? Directorio;
+﻿string Directorio;
 
 do
 {
@@ -21,17 +21,33 @@ foreach (string Carpeta in ListadoCarpetas)
     Console.WriteLine(Carpeta);
 }
 
+string NuevoArchivo = Directorio + @"\reporte_archivos.csv";
+FileInfo fileInfo;
+
 Console.WriteLine("---------------------");
 Console.WriteLine("Listado de archivos en \"" + Directorio + "\"");
 
-foreach (string Archivo in ListadoArchivos)
+if (!File.Exists(NuevoArchivo))
 {
-    if (Archivo != ".gitignore")
-    {
-        Console.WriteLine(Archivo);
-        FileInfo fileOp = new FileInfo(Archivo);
-        Console.WriteLine("Tamaño: {0} KB" , ((fileOp.Length)/1024));
-    }
+    File.Create(NuevoArchivo).Close();
 }
 
+string[] Lineas = new string[ListadoArchivos.Count + 1];
+Lineas[0] = "Ruta ; Tamaño (KB) ; Última modificación";
+int i = 1;
+
+foreach (string Archivo in ListadoArchivos)
+{
+    Console.WriteLine(Archivo);
+    fileInfo = new FileInfo(Archivo);
+    Console.WriteLine("Tamaño: {0} KB", ((fileInfo.Length) / 1024));
+    string nombre = fileInfo.FullName;
+    double tamaño = fileInfo.Length / 1024;
+    DateTime ultimaModificacion = fileInfo.LastWriteTimeUtc;
+    Lineas[i] = $"{nombre}; {tamaño:F2}; {ultimaModificacion}";
+    i++;
+}
+
+File.WriteAllLines(NuevoArchivo, Lineas);
+Console.WriteLine($"Reporte guardado en {NuevoArchivo}");
 
