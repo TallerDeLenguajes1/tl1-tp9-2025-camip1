@@ -6,7 +6,7 @@ do
     Directorio = Console.ReadLine();
     if (!Directory.Exists(Directorio))
     {
-        Console.WriteLine("Inavlido: Directorio inexistente. Intente nuevamente.");
+        Console.WriteLine("Invalido: Directorio inexistente. Intente nuevamente.");
     }
 } while (!Directory.Exists(Directorio));
 
